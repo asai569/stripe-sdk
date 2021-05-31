@@ -49,7 +49,7 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
   //    mask:
   //        '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
 
-  final maskFormatter = [
+  final List<TextInputFormatter> maskFormatter = [
     FilteringTextInputFormatter.digitsOnly,
     ValidadeCartaoInputFormatter(),
   ];
@@ -90,7 +90,7 @@ class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
         final year = int.tryParse(arr[1]);
         widget.onSaved(month, year);
       },
-      inputFormatters: [maskFormatter],
+      inputFormatters: maskFormatter,
       style: widget.textStyle,
       decoration: widget.decoration,
       keyboardType: TextInputType.number,

@@ -45,7 +45,7 @@ class _CardCvcFormFieldState extends State<CardCvcFormField> {
     return TextFormField(
       initialValue: widget.initialValue,
       autofillHints: [AutofillHints.creditCardSecurityCode],
-      inputFormatters: [maskFormatter],
+      inputFormatters: maskFormatter,
       onChanged: widget.onChanged,
       validator: widget.validator,
       onSaved: widget.onSaved,

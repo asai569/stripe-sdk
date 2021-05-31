@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:/mask_text_input_formatter.dart';
 import 'package:flutter/services.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 
@@ -53,7 +52,7 @@ class _CardNumberFormFieldState extends State<CardNumberFormField> {
     return TextFormField(
       initialValue: widget.initialValue,
       controller: widget.textEditingController,
-      inputFormatters: [maskFormatter],
+      inputFormatters: maskFormatter,
       autofocus: true,
       autofillHints: [AutofillHints.creditCardNumber],
       onSaved: widget.onSaved,
