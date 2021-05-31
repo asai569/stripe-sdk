@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter/services.dart';
-import 'package:brasil_fields/brasil_fields.dart';
 
 /// Form field to edit a credit card CVC code, with validation
 class CardCvcFormField extends StatefulWidget {
