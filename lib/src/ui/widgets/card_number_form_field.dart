@@ -1,7 +1,7 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:/mask_text_input_formatter.dart';
+import 'package:flutter/services.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 
 /// Form field to edit a credit card number, with validation.
 class CardNumberFormField extends StatefulWidget {
@@ -40,7 +40,13 @@ class CardNumberFormField extends StatefulWidget {
 }
 
 class _CardNumberFormFieldState extends State<CardNumberFormField> {
-  final maskFormatter = MaskTextInputFormatter(mask: '#### #### #### ####');
+  //androidで不具合を確認
+  //final maskFormatter = MaskTextInputFormatter(mask: '#### #### #### ####');
+
+  final maskFormatter = [
+    FilteringTextInputFormatter.digitsOnly,
+    CartaoBancarioInputFormatter(),
+  ];
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:flutter/services.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 
 /// Form field to edit a credit card CVC code, with validation
 class CardCvcFormField extends StatefulWidget {
@@ -23,7 +23,8 @@ class CardCvcFormField extends StatefulWidget {
   final String? Function(String?) validator;
 
   static const defaultErrorText = 'Invalid CVV';
-  static const defaultDecoration = InputDecoration(border: OutlineInputBorder(), labelText: 'CVV', hintText: 'XXX');
+  static const defaultDecoration = InputDecoration(
+      border: OutlineInputBorder(), labelText: 'CVV', hintText: 'XXX');
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
@@ -31,7 +32,13 @@ class CardCvcFormField extends StatefulWidget {
 }
 
 class _CardCvcFormFieldState extends State<CardCvcFormField> {
-  final maskFormatter = MaskTextInputFormatter(mask: '####');
+  //androidで不具合を確認
+  //final maskFormatter = MaskTextInputFormatter(mask: '####');
+
+  final maskFormatter = [
+    FilteringTextInputFormatter.digitsOnly,
+    CardCVCFormInputFormatter(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +53,40 @@ class _CardCvcFormFieldState extends State<CardCvcFormField> {
       decoration: widget.decoration,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.next,
+    );
+  }
+}
+
+/// Formata o valor do campo com a mascara `0000`
+class CardCVCFormInputFormatter extends TextInputFormatter {
+  /// Define o tamanho máximo do campo.
+  final int maxLength = 4;
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue valorAntigo, TextEditingValue valorNovo) {
+    final novoTextLength = valorNovo.text.length;
+    var selectionIndex = valorNovo.selection.end;
+
+    if (novoTextLength > maxLength) {
+      return valorAntigo;
+    }
+
+    var usedSubstringIndex = 0;
+    final newText = StringBuffer();
+
+    if (novoTextLength >= 4) {
+      newText.write(valorNovo.text.substring(0, usedSubstringIndex = 4) + ' ');
+      if (valorNovo.selection.end >= 5) selectionIndex++;
+    }
+
+    if (novoTextLength >= usedSubstringIndex) {
+      newText.write(valorNovo.text.substring(usedSubstringIndex));
+    }
+
+    return TextEditingValue(
+      text: newText.toString(),
+      selection: TextSelection.collapsed(offset: selectionIndex),
     );
   }
 }

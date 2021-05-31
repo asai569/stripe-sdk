@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/services.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 
 /// Form field to edit a credit card expiration date, with validation.
 class CardExpiryFormField extends StatefulWidget {
@@ -30,8 +33,10 @@ class CardExpiryFormField extends StatefulWidget {
   static const defaultMonthMask = '##';
   static const defaultYearMask = '##';
 
-  static const defaultDecoration =
-      InputDecoration(border: OutlineInputBorder(), labelText: defaultLabelText, hintText: defaultHintText);
+  static const defaultDecoration = InputDecoration(
+      border: OutlineInputBorder(),
+      labelText: defaultLabelText,
+      hintText: defaultHintText);
   static const defaultTextStyle = TextStyle(color: Colors.black);
 
   @override
@@ -39,22 +44,36 @@ class CardExpiryFormField extends StatefulWidget {
 }
 
 class _CardExpiryFormFieldState extends State<CardExpiryFormField> {
-  final maskFormatter =
-      MaskTextInputFormatter(mask: '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
+  //androidで不具合を確認
+  //final maskFormatter = MaskTextInputFormatter(
+  //    mask:
+  //        '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
+
+  final maskFormatter = [
+    FilteringTextInputFormatter.digitsOnly,
+    ValidadeCartaoInputFormatter(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final month = widget.initialMonth?.toString().padLeft(CardExpiryFormField.defaultMonthMask.length, '0');
-    final year = widget.initialYear?.toString().substring(widget.initialYear.toString().length -
-        min(CardExpiryFormField.defaultYearMask.length, widget.initialYear.toString().length));
+    final month = widget.initialMonth
+        ?.toString()
+        .padLeft(CardExpiryFormField.defaultMonthMask.length, '0');
+    final year = widget.initialYear?.toString().substring(
+        widget.initialYear.toString().length -
+            min(CardExpiryFormField.defaultYearMask.length,
+                widget.initialYear.toString().length));
     final initial = (month ?? '') + (year ?? '');
 
-    final initialMaskFormatter =
-        MaskTextInputFormatter(mask: '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
+    final initialMaskFormatter = MaskTextInputFormatter(
+        mask:
+            '${CardExpiryFormField.defaultMonthMask}/${CardExpiryFormField.defaultYearMask}');
 
     return TextFormField(
       validator: widget.validator,
-      initialValue: initialMaskFormatter.formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial)).text,
+      initialValue: initialMaskFormatter
+          .formatEditUpdate(TextEditingValue(), TextEditingValue(text: initial))
+          .text,
       autofillHints: [AutofillHints.creditCardExpirationDate],
       onChanged: (text) {
         final arr = text.split('/');
